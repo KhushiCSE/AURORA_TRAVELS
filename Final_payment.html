@@ -92,7 +92,7 @@
 <body>
 
 <div class="nav-header">
-    <div class="logo-circle"><img src="D:\Khushi\RVU\2 Sem\DBMS\AURORA LOGO 3.jpeg" alt="Aurora Travels Logo"></div>
+    <div class="logo-circle"><img src="./AURORA_LOGO.jpeg" alt="Aurora Travels Logo"></div>
     <h1>Aurora Travels</h1>
 </div>
 
@@ -215,7 +215,7 @@
         if (isSuccess) {
             const bId = localStorage.getItem("currentBookingId");
             
-            fetch('http://localhost:3000/api/payment-success', {
+            fetch('https://aurora-travels.onrender.com/api/payment-success', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 

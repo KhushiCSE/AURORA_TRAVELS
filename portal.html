@@ -135,7 +135,7 @@
             const passportValue = document.getElementById('password').value; // Sending Passport as Password
 
             try {
-                const res = await fetch('http://localhost:3000/api/login', {
+                const res = await fetch('https://aurora-travels.onrender.com/api/login', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ 
@@ -173,7 +173,7 @@
         // --- FETCH BOOKINGS USING PASSPORT ---
         async function fetchBookings(passport) {
             try {
-                const res = await fetch(`http://localhost:3000/api/user-bookings/${passport}`);
+                const res = await fetch(`https://aurora-travels.onrender.com/api/user-bookings/${passport}`);
                 const bookings = await res.json();
                 const body = document.getElementById('bookingsBody');
                 body.innerHTML = bookings.length ? "" : "<tr><td colspan='4'>No active bookings found.</td></tr>";
@@ -195,7 +195,7 @@
         async function cancelTicket(passport) {
             if(!confirm("Are you sure you want to cancel this ticket and move it to history?")) return;
             try {
-                const res = await fetch('http://localhost:3000/api/cancel', {
+                const res = await fetch('https://aurora-travels.onrender.com/api/cancel', {
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ passport })

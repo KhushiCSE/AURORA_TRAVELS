@@ -79,7 +79,7 @@
 
 <div class="hero" data-aos="fade-down">
     <div class="logo-circle">
-        <img src="D:\Khushi\RVU\2 Sem\DBMS\AURORA LOGO 3.jpeg" alt="Aurora Logo">
+        <img src="./AURORA_LOGO.jpeg" alt="Aurora Logo">
     </div>
     <h1>Aurora Travels</h1>
     <p>Journey Beyond Borders ✈️</p>
@@ -186,7 +186,7 @@
             basePrice: basePrice
         };
 
-        fetch('http://localhost:3000/api/book', {
+        fetch('https://aurora-travels.onrender.com/api/book', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bookingData)
