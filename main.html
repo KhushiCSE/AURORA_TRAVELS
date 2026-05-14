@@ -513,12 +513,11 @@ searchInput.addEventListener('change', () => {
             card.style.display = "none";
         }
     });
-    setTimeout(() => {
-    window.scrollTo({
-        top: document.getElementById('destinations').offsetTop - 20,
-        behavior: 'smooth'
-    });
-}, 100);
+    if (query !== '') {
+        const dest = document.getElementById('destinations');
+        const y = dest.getBoundingClientRect().top + window.pageYOffset - 20;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+    }
 });
 
         // FAQ TOGGLE
