@@ -1,7 +1,3 @@
-DROP DATABASE aurora_travels;
-CREATE DATABASE aurora_travels;
-USE aurora_travels;
-
 -- ======================================================
 -- 1. TABLES (DDL - Data Definition Language)
 -- ======================================================

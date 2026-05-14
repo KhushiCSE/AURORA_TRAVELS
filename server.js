@@ -9,10 +9,11 @@ app.use(bodyParser.json());
 
 // 1. DATABASE CONNECTION
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root', // <--- DOUBLE CHECK THIS: Use the password that worked in your CMD
-    database: 'aurora_travels'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 3306
 });
 
 db.connect(err => {
