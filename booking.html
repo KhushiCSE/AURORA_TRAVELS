@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aurora Travels | Secure Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #ffd369;
+            --secondary: #ff9f45;
+            --glass: rgba(255, 255, 255, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(175deg, #0306b1, #210368);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #fff;
+            padding-bottom: 50px;
+        }
+
+        .hero { text-align: center; padding: 50px 20px 30px; }
+        .logo-circle {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 0 25px rgba(255, 211, 105, 0.4);
+        }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--glass);
+            backdrop-filter: blur(18px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-title { color: var(--primary); margin: 30px 0 20px; font-size: 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.85rem; opacity: 0.9; }
+        input, select {
+            padding: 14px; border-radius: 12px; border: none;
+            background: rgba(255,255,255,0.9); color: #333; font-size: 1rem;
+        }
+
+        .confirm-btn {
+            width: 100%; padding: 18px; margin-top: 40px; border: none;
+            border-radius: 50px; background: linear-gradient(90deg, #e6b347, #d48b32);
+            color: #000; font-weight: 700; font-size: 1.1rem; cursor: pointer;
+        }
+
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .popup {
+            background: white; color: #333; padding: 40px; border-radius: 25px;
+            text-align: center; max-width: 400px; position: relative;
+        }
+        .promo-box { background: #fff4d6; padding: 10px; border: 2px dashed #e6b347; margin: 20px 0; font-weight: bold; }
+        .close-x { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+<div class="hero" data-aos="fade-down">
+    <div class="logo-circle">
+        <img src="D:\Khushi\RVU\2 Sem\DBMS\AURORA LOGO 3.jpeg" alt="Aurora Logo">
+    </div>
+    <h1>Aurora Travels</h1>
+    <p>Journey Beyond Borders ✈️</p>
+</div>
+
+<div class="container" data-aos="fade-up">
+    <form id="travelForm">
+        <h2 class="section-title">Personal Information</h2>
+        <div class="grid">
+            <div class="input-group"><label>Full Name</label><input type="text" id="fullName" required></div>
+            <div class="input-group"><label>Date of Birth</label><input type="date" id="dob" required></div>
+            <div class="input-group"><label>Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div>
+            <div class="input-group"><label>Nationality</label><input type="text" id="nationality" required></div>
+            <div class="input-group"><label>Phone</label><input type="tel" id="phone" required></div>
+            <div class="input-group"><label>Email</label><input type="email" id="email" required></div>
+        </div>
+
+        <h2 class="section-title">Identity Details</h2>
+        <div class="grid">
+            <div class="input-group"><label>Passport Number</label><input type="text" id="passport" required></div>
+            <div class="input-group"><label>Issuing Country</label><input type="text" id="issueCountry"></div>
+            <div class="input-group"><label>Number of Passengers</label><input type="number" id="passengerCount" value="1" min="1" required></div>
+        </div>
+
+        <h2 class="section-title">Travel Details</h2>
+        <div class="grid">
+            <div class="input-group"><label>Departure City</label><input type="text" id="depCity" required></div>
+            <div class="input-group"><label>Destination City</label>
+                <select id="destCity" required>
+                    <option value="">Select Destination</option>
+                    <option value="France">France</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Switzerland">Switzerland</option>
+                    <option value="Maldives">Maldives</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="North America">North America</option>
+                    <option value="South Korea">South Korea</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Bali">Bali</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Departure Date</label><input type="date" id="depDate" required></div>
+            <div class="input-group"><label>Return Date</label><input type="date" id="returnDate"></div>
+        </div>
+
+        <button type="submit" class="confirm-btn">Confirm & Proceed to Payment</button>
+    </form>
+</div>
+
+<div class="popup-overlay" id="offerPopup">
+    <div class="popup">
+        <span class="close-x" onclick="closePopup()">×</span>
+        <h2>🎉 Special Offer!</h2>
+        <p>Get 15% OFF on your first booking.</p>
+        <div class="promo-box">Use Code: AURORA15</div>
+        <button onclick="closePopup()" style="width:100%; padding:10px; background:#ffd369; border:none; border-radius:10px; cursor:pointer;">Start Planning</button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000 });
+
+    const priceList = {
+        "France": 42000, "Japan": 55000, "Switzerland": 60000,
+        "Maldives": 35000, "United Kingdom": 45000, "North America": 65000,
+        "South Korea": 48000, "Australia": 52000, "Bali": 25000
+    };
+
+    window.onload = function() {
+        if(!sessionStorage.getItem("shown")) {
+            setTimeout(() => { document.getElementById('offerPopup').style.display='flex'; }, 2000);
+            sessionStorage.setItem("shown", "true");
+        }
+        const params = new URLSearchParams(window.location.search);
+        const destination = params.get('dest');
+        if (destination) { 
+            document.getElementById('destCity').value = destination; 
+        }
+    };
+
+    function closePopup() { document.getElementById('offerPopup').style.display='none'; }
+
+    document.getElementById("travelForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const dest = document.getElementById("destCity").value;
+        const name = document.getElementById("fullName").value;
+        const passengers = document.getElementById("passengerCount").value;
+        const passportNum = document.getElementById("passport").value;
+        const depCity = document.getElementById("depCity").value;
+        const depDate = document.getElementById("depDate").value;
+        const emailVal = document.getElementById("email").value;
+        const basePrice = priceList[dest] || 0;
+
+        const bookingData = {
+            fullName: name,
+            passport: passportNum,
+            email: emailVal, 
+            depCity: depCity,
+            destCity: dest,
+            depDate: depDate,
+            numPassengers: passengers,
+            basePrice: basePrice
+        };
+
+        fetch('http://localhost:3000/api/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookingData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Save data so Payment Page can display it
+            localStorage.setItem("currentBookingId", data.bookingId);
+            localStorage.setItem("fullName", name);
+            localStorage.setItem("email", emailVal);
+            localStorage.setItem("passport", passportNum);
+            localStorage.setItem("destCity", dest);
+            localStorage.setItem("numPassengers", passengers);
+            localStorage.setItem("basePrice", basePrice);
+
+            // Redirect to Payment Page
+            window.location.href = "Final_payment.html";
+        })
+        .catch(err => {
+            console.error("Database connection failed:", err);
+            alert("Error: Check if node server.js is running!");
+        });
+    });
+</script>
+</body>
+</html>

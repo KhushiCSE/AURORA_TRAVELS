@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Travels | Explore the World</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ================= GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
+         background: linear-gradient(180deg, #10140d 0%, #140602 45%, #040900 100%);
+         color: white;
+         overflow-x: hidden;
+         }
+
+        /* ================= PREMIUM LOADER ================= */
+        #auroraLoader {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        background: linear-gradient(180deg, #10140d 0%, #1a2115 45%, #242e1d 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        transition: 1s ease;
+        }
+
+        .loader-center {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .plane-wrapper {
+          position: relative;
+          width: 220px;
+          height: 220px;
+          margin: auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+         }
+
+        .plane-wrapper i {
+           font-size: 7rem;
+           color: #d4ff00;
+           filter: drop-shadow(0 0 25px rgba(212,255,0,0.8));
+        }
+
+        #loadingPercent {
+            margin-top: 40px;
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            animation: rotateRing linear infinite;
+        }
+
+        .ring1 { width: 350px; height: 350px; }
+        .ring2 { width: 550px; height: 550px; }
+        .ring3 { width: 750px; height: 750px; }
+
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================= NAVBAR ================= */
+        .custom-nav {
+            position: absolute;
+            top: 25px;
+            width: 100%;
+            z-index: 100;
+            padding: 0 60px;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 2rem; font-weight: 700; color: white; }
+        .logo span { color: #ffd369; }
+
+        .nav-links { display: flex; gap: 35px; }
+        .nav-links a { text-decoration: none; color: white; font-size: .95rem; transition: 0.3s; }
+        .nav-links a:hover { color: #ffd369; }
+
+        /* ================= HERO ================= */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(175deg, #0306b1, #210368);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: 15vw;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            /*text-shadow:
+                0 0 10px rgba(255,255,255,0.3),
+                0 0 20px rgba(0,212,255,0.4),
+                0 0 40px rgba(114,9,183,0.4); */
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.25));
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .search-box {
+            margin: 30px auto;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            outline: none;
+        }
+
+        .primary-btn {
+            background: #ffd369;
+            color: #0a2540;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .primary-btn:hover { transform: scale(1.05); background: #fff; }
+
+        /* ================= SECTION COMMON ================= */
+        .section { padding: 80px 40px; }
+        .section h2 { text-align: center; margin-bottom: 40px; color: #ffd369; font-weight: 700; font-size: 2.5rem; }
+
+        /* ================= COUNTERS ================= */
+        .counter-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:25px;
+        }
+        .counter-box{
+            background:rgba(255,255,255,0.1);
+            padding:40px;
+            border-radius:22px;
+            text-align:center;
+            backdrop-filter:blur(10px);
+        }
+        .counter{
+            font-size:2.7rem;
+            font-weight:700;
+            color:#ffd369;
+        }
+
+        /* ================= DESTINATIONS ================= */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s;
+            height: 100%;
+        }
+        .card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.07); }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card-content { padding: 25px; }
+        .book-now-btn {
+            background: linear-gradient(90deg, #ff9a3c, #ffd369);
+            color: #0a2540; border: none; padding: 10px 25px; border-radius: 10px;
+            font-weight: 700; width: 100%; transition: 0.3s; margin-top: 15px;
+        }
+
+        /* ================= TESTIMONIALS ================= */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+        }
+        .testimonial-card i { color: #ffd369; font-size: 1.5rem; margin-bottom: 15px; display: block; }
+        .user-info { display: flex; align-items: center; margin-top: 20px; }
+        .user-info img { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; }
+
+        /* ================= FAQ ================= */
+        .faq-container{ max-width:900px; margin:auto; }
+        .faq-item{
+            background:rgba(255,255,255,0.08);
+            margin-bottom:15px;
+            border-radius:15px;
+            overflow:hidden;
+        }
+        .faq-question{ padding:20px; cursor:pointer; font-weight:600; position:relative; }
+        .faq-question::after{ content:'+'; position:absolute; right:20px; }
+        .faq-item.active .faq-answer{ max-height:200px; padding:0 20px 20px; }
+        .faq-answer{ max-height:0; overflow:hidden; transition:0.4s; padding:0 20px; color: rgba(255,255,255,0.7); }
+
+        /* ================= FOOTER ================= */
+        footer{ text-align:center; padding:30px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        @media(max-width:768px){ .section{ padding:50px 20px; } }
+    </style>
+</head>
+
+<body>
+
+    <div id="auroraLoader">
+        <div class="ring ring1"></div>
+        <div class="ring ring2"></div>
+        <div class="ring ring3"></div>
+        <div class="loader-center">
+            <div class="plane-wrapper">
+                <i class="fa-solid fa-paper-plane"></i>
+            </div>
+            <div id="loadingPercent">0%</div>
+        </div>
+    </div>
+
+    <div class="custom-nav">
+        <div class="nav-wrapper">
+            <div class="logo">Aurora<span>.</span></div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#destinations">Destinations</a>
+                <a href="#faq">FAQ</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero-section">
+        <div class="hero-content" data-aos="zoom-in">
+            <h1 class="hero-title">AURORA</h1>
+            <p class="hero-subtitle">Premium Travel Experiences in the Heart of the World</p>
+            <div class="search-box">
+                <input type="text" id="destinationSearch" placeholder="Search dream destinations...">
+            </div>
+            <button class="primary-btn" onclick="scrollToDestinations()">Book Your Trip</button>
+        </div>
+    </section>
+
+    <section class="section container" id="about" data-aos="fade-up">
+        <h2>About Us</h2>
+        <div style="max-width:900px;margin:auto;text-align:center;opacity:.9;">
+            <img src="./AURORA LOGO 3.jpeg" style="height:150px;width:150px;border-radius:50%;margin-bottom:20px;object-fit:cover; border: 3px solid #ffd369;">
+            <br><br>
+            <h3 style="color:#ffd369; margin-bottom: 15px;">Your compass to unforgettable journeys.</h3>
+            <p style="line-height: 1.8; font-size: 1.05rem;">
+                Aurora Travels was founded on a simple belief: that travel should be an art form. We don't just book flights and hotels; we curate soulful experiences that bridge the gap between imagination and reality. 
+                <br><br>
+                Whether you are seeking the neon-drenched streets of Tokyo, the emerald rice terraces of Bali, or the silent, snow-capped peaks of the Swiss Alps, our platform is designed to handle every luxury detail. From first-time explorers to seasoned travelers, we provide the safety, precision, and passion required for a world-class adventure.
+            </p>
+        </div>
+    </section>
+
+    <section class="section container">
+        <h2>Our Achievements</h2>
+        <div class="counter-grid">
+            <div class="counter-box">
+                <div class="counter" data-target="10000">0</div>
+                <p>Happy Travelers</p>
+            </div>
+            <div class="counter-box">
+                <div class="counter" data-target="500">0</div>
+                <p>Destinations</p>
+            </div>
+            <div class="counter-box">
+                <div class="counter" data-target="1200">0</div>
+                <p>Luxury Packages</p>
+            </div>
+            <div class="counter-box">
+                <div class="counter" data-target="24">0</div>
+                <p>24/7 Support</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" data-aos="fade-up">
+        <h2>What Our Travelers Say</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"The Bali trip was flawlessly organized. Aurora handled everything from the private villa to the local tours. A truly premium experience."</p>
+                <div class="user-info">
+                    <img src="https://i.pravatar.cc/150?u=1" alt="User">
+                    <div><strong>Sarah Jenkins</strong><br><small>Honeymoon Traveler</small></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"I've traveled with many agencies, but Aurora's attention to detail in Japan was unmatched. The booking was seamless."</p>
+                <div class="user-info">
+                    <img src="https://i.pravatar.cc/150?u=2" alt="User">
+                    <div><strong>David Miller</strong><br><small>Adventure Enthusiast</small></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"Secure payments and 24/7 support gave me peace of mind during my solo trip to France. Highly recommended!"</p>
+                <div class="user-info">
+                    <img src="https://i.pravatar.cc/150?u=3" alt="User">
+                    <div><strong>Elena Rossi</strong><br><small>Solo Traveler</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="destinations">
+        <h2>Popular Destinations</h2>
+        <div class="grid">
+            <div class="card" data-aos="fade-up">
+                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">France</h3><p style="color: white;">Experience romance, art, and timeless architecture.</p><button class="book-now-btn" onclick="goToForm('France')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">Japan</h3><p style="color: white;">Where tradition meets futuristic innovation.</p><button class="book-now-btn" onclick="goToForm('Japan')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">Switzerland</h3><p style="color: white;">Nature's canvas painted in Swiss hues.</p><button class="book-now-btn" onclick="goToForm('Switzerland')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">Maldives</h3><p style="color: white;">Where luxury rests on crystal islands.</p><button class="book-now-btn" onclick="goToForm('Maldives')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80">
+        <div class="card-content"><h3 style="color: white;">United Kingdom</h3><p style="color: white;">Explore the historic streets of London and the Royal Heritage.</p><button class="book-now-btn" onclick="goToForm('United Kingdom')">Book Now</button></div>
+    </div>
+            <div class="card" data-aos="fade-up">
+                <img src="https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">North America</h3><p style="color: white;">Skylines that touch dreams, streets that never sleep.</p><button class="book-now-btn" onclick="goToForm('North America')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">South Korea</h3><p style="color: white;">Walk the streets where K-dramas turn into memories.</p><button class="book-now-btn" onclick="goToForm('South Korea')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">Australia</h3><p style="color: white;">Where waves crash, wildlife roams, and sunsets glow.</p><button class="book-now-btn" onclick="goToForm('Australia')">Book Now</button></div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80">
+                <div class="card-content"><h3 style="color: white;">Bali</h3><p style="color: white;">Where Heaven rests in swing.</p><button class="book-now-btn" onclick="goToForm()">Book Now</button></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">Can I cancel my booking?</div>
+                <div class="faq-answer">
+                    <p>Yes, bookings can be cancelled according to Aurora Travels cancellation policy. Refunds are typically processed within 7-10 business days.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Is payment secure?</div>
+                <div class="faq-answer">
+                    <p>Absolutely. We use 256-bit SSL encryption for all transactions. We do not store your full card details on our servers.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Do I need travel insurance?</div>
+                <div class="faq-answer">
+                    <p>While not mandatory for all locations, we highly recommend travel insurance to cover unforeseen medical costs or trip interruptions.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">How do I get my travel documents?</div>
+                <div class="faq-answer">
+                    <p>All tickets, vouchers, and itinerary documents are sent directly to your registered email address 48 hours after booking confirmation.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Are customized tour packages available?</div>
+                <div class="faq-answer">
+                    <p>Yes! You can contact our 24/7 support team to tailor any of our popular destinations to your specific preferences and budget.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">What happens if my flight is delayed?</div>
+                <div class="faq-answer">
+                    <p>Our premium support team monitors your flight status in real-time. If there is a delay, we automatically notify your hotel and transport transfers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        © 2026 Aurora Travels • Premium Travel Experiences
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // LOADER LOGIC
+        let percent = 0;
+        const percentText = document.getElementById("loadingPercent");
+        const loader = document.getElementById("auroraLoader");
+        const loadingInterval = setInterval(() => {
+            percent += Math.floor(Math.random() * 5) + 2; 
+            if (percent > 100) percent = 100;
+            percentText.innerText = percent + "%";
+            if (percent === 100) {
+                clearInterval(loadingInterval);
+                setTimeout(() => {
+                    loader.style.opacity = "0";
+                    loader.style.visibility = "hidden";
+                }, 500);
+            }
+        }, 50);
+
+        // SEARCH FILTER LOGIC
+        const searchInput = document.getElementById('destinationSearch');
+        const cards = document.querySelectorAll('.card');
+        searchInput.addEventListener('keyup', () => {
+            const query = searchInput.value.toLowerCase();
+            cards.forEach(card => {
+                const countryName = card.querySelector('h3').innerText.toLowerCase();
+                if (countryName.includes(query)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        // FAQ TOGGLE
+        const faqItems = document.querySelectorAll(".faq-item");
+        faqItems.forEach(item => {
+            item.querySelector(".faq-question").addEventListener("click", () => {
+                item.classList.toggle("active");
+            });
+        });
+
+        // COUNTER LOGIC
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            counter.innerText = '0';
+            const updateCounter = () => {
+                const target = +counter.getAttribute('data-target');
+                const current = +counter.innerText;
+                const increment = target / 100;
+                if(current < target){
+                    counter.innerText = `${Math.ceil(current + increment)}`;
+                    setTimeout(updateCounter, 20);
+                } else {
+                    counter.innerText = target + "+";
+                }
+            }
+            updateCounter();
+        });
+
+        // function scrollToDestinations() { document.getElementById('destinations').scrollIntoView(); }
+        // function goToForm() { alert("Connecting to Booking System..."); }
+  // REPLACE your old goToForm function with this:
+function goToForm(countryName) {
+    // This takes the country name and sends it to booking.html via the URL
+    if (countryName) {
+        window.location.href = `booking.html?dest=${encodeURIComponent(countryName)}`;
+    } else {
+        // Fallback if no country is specified
+        window.location.href = "booking.html";
+    }
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aurora Travels | Official E-Ticket</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ffd369; --dark: #0a2540; --text: #333; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: #f0f2f5; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 50px 20px; 
+            min-height: 100vh;
+        }
+
+        .ticket-container {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-left: 10px solid var(--primary);
+        }
+
+        .ticket-header {
+            background: var(--dark);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand h1 { color: var(--primary); font-size: 1.8rem; letter-spacing: 1px; }
+        .pnr-box { text-align: right; }
+        .pnr-box span { display: block; font-size: 0.7rem; opacity: 0.8; }
+        .pnr-box strong { font-size: 1.2rem; color: var(--primary); }
+
+        .ticket-body {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .info-group label {
+            display: block;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #777;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .info-group p {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--dark);
+        }
+
+        .ticket-footer {
+            background: #fdfdfd;
+            border-top: 2px dashed #eee;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            background: #e6f4ea;
+            color: #1e7e34;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .total-paid { font-size: 1.4rem; font-weight: 700; color: var(--dark); }
+
+        .btn-area {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-download { background: var(--dark); color: white; }
+        .btn-download:hover { background: #133b5c; }
+        .btn-home { background: #fff; color: var(--dark); border: 2px solid var(--dark); }
+
+        /* PRINT STYLING FOR PDF */
+        @media print {
+            body { background: white; padding: 0; }
+            .btn-area { display: none; }
+            .ticket-container { box-shadow: none; border: 1px solid #ddd; width: 100%; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ticket-container" id="ticketContent">
+        <div class="ticket-header">
+            <div class="brand">
+                <h1>AURORA TRAVELS</h1>
+                <p style="font-size: 0.8rem;">Confirmed E-Ticket / Boarding Pass</p>
+            </div>
+            <div class="pnr-box">
+                <span>RESERVATION CODE (PNR)</span>
+                <strong id="pnr">--------</strong>
+            </div>
+        </div>
+
+        <div class="ticket-body">
+            <div class="info-group">
+                <label>Passenger Name</label>
+                <p id="tName">--</p>
+            </div>
+            <div class="info-group">
+                <label>Passport Number</label>
+                <p id="tPass">--</p>
+            </div>
+            <div class="info-group">
+                <label>Destination</label>
+                <p id="tTo">--</p>
+            </div>
+            <div class="info-group">
+                <label>Departure City</label>
+                <p id="tFrom">--</p>
+            </div>
+            <div class="info-group">
+                <label>Date of Travel</label>
+                <p id="tDate">--</p>
+            </div>
+            <div class="info-group">
+                <label>Flight Name</label>
+                <p id="tFlight">--</p>
+            </div>
+            <div class="info-group">
+                <label>Gate Closes</label>
+                <p>45 Mins Before Dept.</p>
+            </div>
+            <div class="info-group">
+                <label>Seat Number</label>
+                <p>Assigned at Check-in</p>
+            </div>
+            <div class="info-group">
+                <label>Travel Class</label>
+                <p>Economy Flex</p>
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            <div class="status-badge">PAYMENT CONFIRMED</div>
+            <div style="text-align: right;">
+                <label style="font-size: 0.7rem; color: #777;">TOTAL FARE PAID</label>
+                <p class="total-paid" id="tTotal">₹0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-area">
+        <button class="btn btn-download" onclick="window.print()">Download E-Ticket (PDF)</button>
+        <a href="main.html" class="btn btn-home">Return to Home</a>
+    </div>
+
+    <script>
+      window.onload = function() {
+    // 1. Connection: Security check to prevent direct access without payment
+    const isPaid = localStorage.getItem("paymentSuccess");
+    
+    if (isPaid !== "true") {
+        // Redirects quietly to avoid the error popup shown in your screenshot
+        window.location.href = "main.html";
+        return;
+    }
+
+    // 2. Connection: Mapping flights based on your destination
+    const flightMap = {
+        "France": "AU-PARIS 902",
+        "Japan": "AU-TOKYO 771",
+        "Switzerland": "AU-ALPS 440",
+        "Maldives": "AU-ISLAND 321",
+        "United Kingdom": "AU-LONDON 555",
+        "North America": "AU-STATES 101",
+        "South Korea": "AU-SEOUL 882",
+        "Australia": "AU-SYDNEY 660",
+        "Bali": "AU-TROPIC 229"
+    };
+
+    // 3. Connection: Retrieving stored values from localStorage
+    const passengerName = localStorage.getItem("fullName");
+    const dest = localStorage.getItem("destCity");
+    const base = parseInt(localStorage.getItem("basePrice")) || 0;
+    const count = parseInt(localStorage.getItem("numPassengers")) || 1;
+    const grandTotal = (base * count) * 1.05;
+
+    // 4. Populate Ticket UI (Keeping your exact element IDs)
+    document.getElementById('tName').innerText = passengerName || "Passenger";
+    document.getElementById('tPass').innerText = localStorage.getItem("passport") || "N/A";
+    document.getElementById('tFrom').innerText = localStorage.getItem("depCity") || "Departure City";
+    document.getElementById('tTo').innerText = dest || "Destination";
+    document.getElementById('tDate').innerText = localStorage.getItem("depDate") || "TBD";
+    document.getElementById('tTotal').innerText = "₹" + Math.round(grandTotal).toLocaleString();
+    document.getElementById('tFlight').innerText = flightMap[dest] || "Aurora Int. Flight";
+    
+    // 5. Random PNR Generation
+    document.getElementById('pnr').innerText = "AUR" + Math.floor(100000 + Math.random() * 900000);
+};
+    </script>
+</body>
+</html>

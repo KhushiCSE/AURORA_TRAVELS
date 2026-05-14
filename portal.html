@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora | Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root { --accent: #ffd369; --card: rgba(255,255,255,0.08); }
+        body {
+              margin: 0;
+              font-family: 'Poppins', sans-serif;
+              background: linear-gradient(175deg, #0306b1, #210368);
+              color: white;
+              min-height: 100vh;
+          }
+
+        /* --- LOGIN STYLING --- */
+        #login-section { height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 350px; text-align: center; backdrop-filter: blur(10px); }
+        .login-card h2 { color: var(--accent); margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
+    
+        .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #13cde1, #19dfc8);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+}
+        /* --- DASHBOARD STYLING --- */
+        #dashboard-section { display: none; padding: 40px; max-width: 1100px; margin: auto; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .logo { font-size: 1.8rem; font-weight: 900; } .logo span { color: var(--accent); }
+        
+        .panel { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px; }
+        h3 { color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid var(--accent); opacity: 0.8; }
+        td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .cancel-btn { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+
+        /* Package Gen */
+        .gen-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        #packageResult { margin-top: 20px; padding: 20px; background: rgba(255,211,105,0.1); border-radius: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="login-section">
+        <div class="login-card">
+            <div class="logo">Aurora<span>.</span></div>
+            <p>Login with your Booking Details</p>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Registered Email" required>
+                <input type="password" id="password" placeholder="Passport Number" required>
+                <button type="submit" class="btn-primary">View Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-section">
+        <div class="dash-header">
+            <div class="logo">Aurora<span>.</span></div>
+            <div>
+                <span id="nav-name" style="margin-right: 15px; font-weight: 600;"></span>
+                <button class="cancel-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3><i class="fa-solid fa-plane-departure"></i> Your Active Bookings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Destination</th>
+                        <th>Passport</th>
+                        <th>Travel Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsBody"></tbody>
+            </table>
+        </div>
+
+        <div class="panel">
+            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> Trip Guide</h3>
+            <div class="gen-box">
+                <select id="genDest">
+                    <option value="Japan">Japan</option>
+                    <option value="Switzerland">Switzerland</option>
+                    <option value="Maldives">Maldives</option>
+                </select>
+                <select id="genType">
+                    <option value="Adventure">Adventure</option>
+                    <option value="Relaxation">Relaxation</option>
+                </select>
+            </div>
+            <button class="btn-primary" style="margin-top: 15px;" onclick="generateTrip()">Generate Trip Details</button>
+            
+            <div id="packageResult">
+                <h4 id="resTitle" style="margin: 0; color: var(--accent);"></h4>
+                <p id="resWeather" style="margin: 10px 0; font-weight: 600;"></p>
+                <p id="resDesc" style="font-size: 0.9rem;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ON PAGE LOAD ---
+        window.onload = () => {
+            const savedPassport = localStorage.getItem("userPassport");
+            const savedName = localStorage.getItem("userName");
+            if (savedPassport && savedName) {
+                showDashboard(savedName, savedPassport);
+            }
+        };
+
+        // --- UPDATED LOGIN LOGIC ---
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailValue = document.getElementById('email').value;
+            const passportValue = document.getElementById('password').value; // Sending Passport as Password
+
+            try {
+                const res = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        email: emailValue, 
+                        passport: passportValue 
+                    })
+                });
+                const data = await res.json();
+                
+                if(data.success) {
+                    // Store details to maintain session
+                    localStorage.setItem("userName", data.user.full_name);
+                    localStorage.setItem("userPassport", data.user.passport_number);
+                    showDashboard(data.user.full_name, data.user.passport_number);
+                } else {
+                    alert("Login Failed: " + (data.message || "Invalid Credentials"));
+                }
+            } catch (err) { 
+                alert("Server Error: Ensure node server.js is running!"); 
+            }
+        });
+
+        function showDashboard(name, passport) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('nav-name').innerText = "Welcome, " + name;
+            fetchBookings(passport);
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        // --- FETCH BOOKINGS USING PASSPORT ---
+        async function fetchBookings(passport) {
+            try {
+                const res = await fetch(`http://localhost:3000/api/user-bookings/${passport}`);
+                const bookings = await res.json();
+                const body = document.getElementById('bookingsBody');
+                body.innerHTML = bookings.length ? "" : "<tr><td colspan='4'>No active bookings found.</td></tr>";
+
+                bookings.forEach(b => {
+                    body.innerHTML += `
+                        <tr>
+                            <td>${b.dest_city}</td>
+                            <td>${b.passport_number}</td>
+                            <td>${new Date(b.dep_date).toLocaleDateString()}</td>
+                            <td><button class="cancel-btn" onclick="cancelTicket('${b.passport_number}')">Cancel</button></td>
+                        </tr>`;
+                });
+            } catch (err) {
+                console.error("Fetch Error:", err);
+            }
+        }
+
+        async function cancelTicket(passport) {
+            if(!confirm("Are you sure you want to cancel this ticket and move it to history?")) return;
+            try {
+                const res = await fetch('http://localhost:3000/api/cancel', {
+                    method: 'DELETE',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ passport })
+                });
+                const data = await res.json();
+                alert(data.message);
+                location.reload();
+            } catch (err) {
+                alert("Error during cancellation");
+            }
+        }
+
+        // --- PACKAGE GENERATOR ---
+        function generateTrip() {
+            const dest = document.getElementById('genDest').value;
+            const data = {
+                "Japan": { w: "15°C - Pleasant", d: "Cultural heritage meets neon cities. Great for hiking." },
+                "Switzerland": { w: "-2°C - Snowy", d: "Luxury Alps experience. Best for skiing and scenic trains." },
+                "Maldives": { w: "30°C - Tropical", d: "Overwater bungalows and crystal clear diving spots." }
+            };
+            document.getElementById('resTitle').innerText = "Your Aurora Guide to " + dest;
+            document.getElementById('resWeather').innerText = "🌤 Climate: " + data[dest].w;
+            document.getElementById('resDesc').innerText = data[dest].d;
+            document.getElementById('packageResult').style.display = "block";
+        }
+    </script>
+</body>
+</html>
